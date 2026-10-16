@@ -2,7 +2,6 @@
 
 LinkNest is a personal link-sharing app built with React, Express, and MongoDB. Create a public profile, organize links, and share them from one page.
 
-**Live demo:** [linknest-732.vercel.app](https://linknest-732.vercel.app)
 
 ## Features
 
