@@ -1,241 +1,122 @@
-# 🔗 LinkNest – Personal Link Sharing Platform
+# LinkNest
 
-A modern **Personal Link Sharing Platform** built using the **MERN Stack (MongoDB, Express.js, React.js, Node.js)**. LinkNest allows users to create a personal profile, manage important links, upload a profile picture and resume, and easily share their profile with others.
+LinkNest is a personal link-sharing app built with React, Express, and MongoDB. Create a public profile, organize links, and share them from one page.
 
-🌐 **Live Demo:** https://linknest-732.vercel.app
+**Live demo:** [linknest-732.vercel.app](https://linknest-732.vercel.app)
 
----
+## Features
 
-## 📌 Features
+- Sign up with email OTP verification, sign in, and reset a forgotten password
+- Create a public profile at `/<username>` and update its name, username, bio text, and email
+- Add, edit, delete, and drag to reorder up to 50 profile links
+- Upload and crop a profile image and upload a PDF resume (maximum 2 MB per file)
+- Preview and share public profiles
+- Delete an account
+- Responsive interface with profile-loading skeletons
 
-* 🔐 Secure User Authentication
-* ✉️ Email OTP Verification
-* 🔑 Forgot Password & Password Reset
-* 👤 Custom Public Profile
-* 🔗 Add, Delete & Reorder Links
-* 🖱️ Drag & Drop Link Management
-* 🖼️ Profile Picture Upload & Crop
-* 📄 Resume Upload & PDF Viewer
-* 📤 Easy Profile Sharing
-* 📱 Fully Responsive Design
-* ⚡ Fast & Smooth User Interface
-* 🎨 Clean & Modern UI
-* 🗑️ Account Deletion
+## Tech stack
 
----
+- **Frontend:** React 19, Vite, React Router, Tailwind CSS, Context API, `@dnd-kit`, `react-easy-crop`, `react-pdf`, Lucide React, Typed.js
+- **Backend:** Node.js, Express 5, MongoDB with Mongoose, JWT, bcryptjs, Nodemailer, Multer
 
-## 🛠️ Tech Stack
-
-### Frontend
-
-* React.js
-* Vite
-* React Router DOM
-* Tailwind CSS
-* Context API
-* JavaScript ES6+
-* @dnd-kit
-* React PDF
-* React Easy Crop
-* Lucide React
-* Typed.js
-
-### Backend
-
-* Node.js
-* Express.js
-* MongoDB
-* Mongoose
-* JWT Authentication
-* Bcrypt.js
-* Nodemailer
-* Multer
-
----
-
-## 📂 Project Structure
+## Project structure
 
 ```text
-linknest
-│
-├── backend
-│   ├── config
-│   ├── controllers
-│   ├── middlewares
-│   ├── models
-│   ├── routes
-│   ├── utils
-│   ├── package.json
-│   └── server.js
-│
-├── frontend
-│   ├── src
-│   │   ├── components
-│   │   ├── context
-│   │   ├── pages
-│   │   ├── utils
-│   │   ├── styles
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── package.json
-│   └── vite.config.js
-│
+linknest/
+├── backend/
+│   ├── src/
+│   │   ├── config/        # MongoDB and email configuration
+│   │   ├── controllers/   # Authentication and profile logic
+│   │   ├── middlewares/   # Authentication and file-upload middleware
+│   │   ├── models/        # User and OTP models
+│   │   ├── routes/        # Authentication and user API routes
+│   │   ├── utils/
+│   │   └── server.js
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── pages/
+│   │   ├── styles/
+│   │   └── utils/
+│   └── package.json
 └── README.md
 ```
 
----
+## Requirements
 
-## 🚀 Getting Started
+- Node.js and npm
+- A MongoDB connection string
+- SMTP credentials for sending signup and password-reset OTP emails
 
-### 1️⃣ Clone the Repository
+## Run locally
 
-```bash
-git clone https://github.com/ftnimran/linknest.git
-```
-
-### 2️⃣ Navigate to the Project
+Clone the repository and install the dependencies in both applications:
 
 ```bash
-cd linknest
+git clone https://github.com/NikushBhardwaj/Linknest.git
+cd Linknest
 ```
 
-### 3️⃣ Install Dependencies
-
-#### Backend
+In one terminal:
 
 ```bash
 cd backend
 npm install
 ```
 
-#### Frontend
+Create `backend/.env`:
+
+```dotenv
+PORT=5000
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>/<database>
+JWT_SECRET=<a-long-random-secret>
+EMAIL_HOST=<smtp-host>
+EMAIL_PORT=<smtp-port>
+EMAIL_USER=<smtp-username>
+EMAIL_PASS=<smtp-password>
+EMAIL_FROM=<sender-email-address>
+```
+
+Start the API:
+
+```bash
+npm run dev
+```
+
+In a second terminal, install and start the frontend:
 
 ```bash
 cd frontend
 npm install
-```
-
----
-
-## ▶️ Run the Application
-
-### Start Backend
-
-```bash
-cd backend
 npm run dev
 ```
 
-### Start Frontend
+The frontend uses `http://localhost:5000` as its API by default. To use a different API URL, create `frontend/.env.local` and set:
 
-```bash
-cd frontend
-npm run dev
+```dotenv
+VITE_API_BASE_URL=http://localhost:5000
 ```
 
----
+Open the local URL printed by Vite. The frontend and backend are separate applications and should be run in separate terminals.
 
-## 📚 Main Modules
+## API overview
 
-### 👤 Profile Management
+The backend defaults to port `5000`.
 
-* Create Public Profile
-* Update Profile Information
-* Custom Username
-* Profile Picture Management
-* Resume Management
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `POST` | `/api/auth/register` | Request a signup OTP |
+| `POST` | `/api/auth/verify-signup-otp` | Verify OTP and create an account |
+| `POST` | `/api/auth/login` | Sign in |
+| `POST` | `/api/auth/forgot-password` | Request a password-reset OTP |
+| `POST` | `/api/auth/verify-reset-otp` | Verify a password-reset OTP |
+| `POST` | `/api/auth/reset-password` | Set a new password |
+| `GET` | `/api/user/u/:username` | Read a public profile |
+| `GET` | `/api/user/profile` | Read the signed-in user's profile |
+| `PUT` | `/api/user/profile` | Update profile details and files |
+| `PUT` | `/api/user/links` | Update profile links |
+| `DELETE` | `/api/user/profile` | Delete the signed-in user's account |
 
-### 🔗 Link Management
-
-* Add Links
-* Delete Links
-* Drag & Drop Reordering
-* Website & Social Links
-* Email, Phone, SMS & WhatsApp Links
-
-### 📄 Resume Management
-
-* Upload Resume
-* Preview Resume
-* Zoom & Rotate PDF
-* Page Navigation
-* Download Resume
-
-### 📤 Profile Sharing
-
-* Share Profile URL
-* WhatsApp Sharing
-* X Sharing
-* Email Sharing
-* Copy Profile Details
-
-### 🔐 Authentication
-
-* Sign Up
-* Email OTP Verification
-* Login
-* Forgot Password
-* Password Reset
-* Protected Dashboard
-
----
-
-## 🌱 Future Improvements
-
-* 📊 Profile Analytics
-* 🔗 Link Click Tracking
-* 🌐 Custom Domain Support
-* 🎨 More Profile Themes
-* 📱 Progressive Web App (PWA)
-* ☁️ Cloud Storage Integration
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome!
-
-1. Fork the repository
-2. Create a new branch
-
-```bash
-git checkout -b feature-name
-```
-
-3. Commit your changes
-
-```bash
-git commit -m "Add new feature"
-```
-
-4. Push to GitHub
-
-```bash
-git push origin feature-name
-```
-
-5. Create a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License**.
-
----
-
-## 👨‍💻 Author
-
-**Imran Ali**
-
-💻 MERN Stack Developer
-
-GitHub: https://github.com/ftnimran
-
----
-
-## ⭐ Support
-
-If you found this project helpful, please consider giving it a **Star ⭐** on GitHub.
-
-It helps support the project and motivates future improvements.
+Profile-management endpoints require a JWT bearer token.
